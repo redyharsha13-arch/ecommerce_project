@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}ShopEase{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <span><i class="fas fa-truck"></i> Free delivery on orders over ₹499</span>
+    <span>
+      {% if user.is_authenticated %}
+        Welcome, <strong>{{ user.username }}</strong> &nbsp;|&nbsp;
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a> &nbsp;|&nbsp;
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="{% url 'home' %}" class="logo">
+      <i class="fas fa-shopping-bag"></i> ShopEase
+    </a>
+
+    <form class="search-bar" action="{% url 'product_list' %}" method="GET">
+      <input type="text" name="q" placeholder="Search products…" value="{{ request.GET.q }}" />
+      <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+
+    <div class="nav-actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="nav-icon" title="Profile">
+          <i class="fas fa-user"></i>
+        </a>
+        <a href="{% url 'order_list' %}" class="nav-icon" title="Orders">
+          <i class="fas fa-box"></i>
+        </a>
+      {% endif %}
+      <a href="{% url 'cart' %}" class="nav-icon cart-icon" title="Cart">
+        <i class="fas fa-shopping-cart"></i>
+        {% if cart_count %}<span class="badge">{{ cart_count }}</span>{% endif %}
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Category Bar ── -->
+<div class="cat-bar">
+  <div class="container cat-inner">
+    <a href="{% url 'product_list' %}">All Products</a>
+    {% for cat in categories|slice:":8" %}
+      <a href="{% url 'product_list' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── Messages ── -->
+{% if messages %}
+<div class="messages-wrapper container">
+  {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">
+      {{ msg }} <button class="close-btn" onclick="this.parentElement.remove()">×</button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ── Content ── -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <h3><i class="fas fa-shopping-bag"></i> ShopEase</h3>
+      <p>Your one-stop shop for everything you need. Quality products at the best prices.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'product_list' %}">Products</a></li>
+        <li><a href="{% url 'cart' %}">Cart</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'order_list' %}">My Orders</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div>
+      <h4>Account</h4>
+      <ul>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'profile' %}">My Profile</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+          <li><a href="{% url 'register' %}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p><i class="fas fa-envelope"></i> support@shopease.com</p>
+      <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 ShopEase. All rights reserved. Built with Django.</p>
+  </div>
+</footer>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>

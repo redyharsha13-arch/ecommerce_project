@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+{% block title %}Login – ShopEase{% endblock %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo"><i class="fas fa-shopping-bag"></i> ShopEase</div>
+    <h2>Welcome Back</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<p class="field-error">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-full btn-lg">Login</button>
+    </form>
+    <p class="auth-switch">New customer? <a href="{% url 'register' %}">Create account</a></p>
+  </div>
+</div>
+{% endblock %}

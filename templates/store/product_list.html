@@ -1,0 +1,80 @@
+{% extends 'store/base.html' %}
+{% block title %}Products – ShopEase{% endblock %}
+
+{% block content %}
+<div class="container page-layout">
+
+  <!-- Sidebar Filter -->
+  <aside class="sidebar">
+    <h3>Filters</h3>
+
+    <div class="filter-group">
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="{% url 'product_list' %}" class="{% if not current_category %}active{% endif %}">All</a></li>
+        {% for cat in categories %}
+          <li>
+            <a href="{% url 'product_list' %}?category={{ cat.slug }}"
+               class="{% if current_category.slug == cat.slug %}active{% endif %}">
+              {{ cat.name }}
+              <small>({{ cat.products.count }})</small>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <form class="filter-group" method="GET" action="{% url 'product_list' %}">
+      <h4>Price Range</h4>
+      {% if current_category %}<input type="hidden" name="category" value="{{ current_category.slug }}" />{% endif %}
+      {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}" />{% endif %}
+      <input type="hidden" name="sort" value="{{ sort }}" />
+      <div class="price-inputs">
+        <input type="number" name="min_price" placeholder="Min ₹" value="{{ min_price }}" />
+        <span>–</span>
+        <input type="number" name="max_price" placeholder="Max ₹" value="{{ max_price }}" />
+      </div>
+      <button type="submit" class="btn btn-outline btn-sm mt-1">Apply</button>
+    </form>
+  </aside>
+
+  <!-- Main -->
+  <div class="product-main">
+    <div class="product-toolbar">
+      <div>
+        <h2>
+          {% if current_category %}{{ current_category.name }}
+          {% elif search_query %}Results for "{{ search_query }}"
+          {% else %}All Products{% endif %}
+        </h2>
+        <small>{{ products.count }} product{{ products.count|pluralize }}</small>
+      </div>
+      <form method="GET" action="{% url 'product_list' %}">
+        {% if current_category %}<input type="hidden" name="category" value="{{ current_category.slug }}" />{% endif %}
+        {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}" />{% endif %}
+        <select name="sort" onchange="this.form.submit()">
+          <option value="">Sort by</option>
+          <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+          <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low→High</option>
+          <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High→Low</option>
+          <option value="name" {% if sort == 'name' %}selected{% endif %}>Name A–Z</option>
+        </select>
+      </form>
+    </div>
+
+    <div class="product-grid">
+      {% for product in products %}
+        {% include 'store/partials/product_card.html' %}
+      {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-search fa-3x"></i>
+          <h3>No products found</h3>
+          <p>Try adjusting your filters or search term.</p>
+          <a href="{% url 'product_list' %}" class="btn btn-primary">Clear filters</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

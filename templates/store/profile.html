@@ -1,0 +1,64 @@
+{% extends 'store/base.html' %}
+{% block title %}My Profile – ShopEase{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="profile-layout">
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+      <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+      <h3>{{ user.username }}</h3>
+      <p>{{ user.email }}</p>
+      <ul class="profile-nav">
+        <li class="active"><a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="{% url 'order_list' %}"><i class="fas fa-box"></i> Orders</a></li>
+        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+
+    <!-- Form -->
+    <div class="profile-content">
+      <h2>Edit Profile</h2>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          {{ form.email }}
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          {{ form.phone }}
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          {{ form.address }}
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            {{ form.city }}
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            {{ form.state }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>ZIP Code</label>
+          {{ form.zip_code }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

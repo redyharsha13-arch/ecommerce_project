@@ -1,0 +1,81 @@
+{% extends 'store/base.html' %}
+{% block title %}ShopEase – Home{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Discover Amazing Products</h1>
+    <p>Shop the latest trends with unbeatable prices and fast delivery</p>
+    <div class="hero-btns">
+      <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">Shop Now</a>
+      <a href="{% url 'product_list' %}?sort=newest" class="btn btn-outline btn-lg">New Arrivals</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="container stats-grid">
+    <div class="stat"><i class="fas fa-truck"></i><span>Free Delivery</span><small>On orders over ₹499</small></div>
+    <div class="stat"><i class="fas fa-undo"></i><span>Easy Returns</span><small>30-day return policy</small></div>
+    <div class="stat"><i class="fas fa-shield-alt"></i><span>Secure Payment</span><small>100% protected</small></div>
+    <div class="stat"><i class="fas fa-headset"></i><span>24/7 Support</span><small>Always here to help</small></div>
+  </div>
+</div>
+
+<!-- Categories -->
+{% if categories %}
+<section class="section container">
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="cat-grid">
+    {% for cat in categories %}
+    <a href="{% url 'product_list' %}?category={{ cat.slug }}" class="cat-card">
+      <div class="cat-icon"><i class="fas fa-tag"></i></div>
+      <span>{{ cat.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Deals -->
+{% if deals %}
+<section class="section deals-section">
+  <div class="container">
+    <h2 class="section-title">🔥 Hot Deals</h2>
+    <div class="product-grid">
+      {% for product in deals %}
+        {% include 'store/partials/product_card.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Featured Products -->
+<section class="section container">
+  <div class="section-header">
+    <h2 class="section-title">Featured Products</h2>
+    <a href="{% url 'product_list' %}" class="btn btn-outline">View All →</a>
+  </div>
+  <div class="product-grid">
+    {% for product in featured %}
+      {% include 'store/partials/product_card.html' %}
+    {% empty %}
+      <p>No products yet. Check back soon!</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Banner -->
+<section class="promo-banner container">
+  <div class="promo-content">
+    <h2>New Season Sale</h2>
+    <p>Up to 50% off on selected items. Limited time offer!</p>
+    <a href="{% url 'product_list' %}" class="btn btn-primary">Shop the Sale</a>
+  </div>
+</section>
+
+{% endblock %}

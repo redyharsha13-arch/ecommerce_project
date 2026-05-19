@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+{% block title %}My Orders – ShopEase{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">My Orders</h1>
+  {% if orders %}
+  <div class="orders-list">
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-card-header">
+        <div>
+          <strong>Order #{{ order.id }}</strong>
+          <small>{{ order.created_at|date:"M d, Y" }}</small>
+        </div>
+        <span class="status-badge {{ order.status }}">{{ order.get_status_display }}</span>
+      </div>
+      <div class="order-card-body">
+        <div>
+          <p>{{ order.items.count }} item{{ order.items.count|pluralize }}</p>
+          <p><strong>₹{{ order.total_price }}</strong></p>
+        </div>
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-outline btn-sm">View Details</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-box fa-4x"></i>
+    <h2>No orders yet</h2>
+    <p>You haven't placed any orders yet.</p>
+    <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

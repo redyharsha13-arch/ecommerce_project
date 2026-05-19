@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+{% block title %}Order #{{ order.id }} – ShopEase{% endblock %}
+{% block content %}
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="{% url 'order_list' %}">My Orders</a> / Order #{{ order.id }}
+  </nav>
+  <h1 class="page-title">Order #{{ order.id }}</h1>
+
+  <div class="order-detail-layout">
+    <div class="order-items-section">
+      <h3>Items Ordered</h3>
+      {% for item in order.items.all %}
+      <div class="order-item-row">
+        <div class="order-item-img">
+          {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+          {% else %}
+            <div class="img-placeholder sm"><i class="fas fa-image"></i></div>
+          {% endif %}
+        </div>
+        <div>
+          <a href="{{ item.product.get_absolute_url }}"><strong>{{ item.product.name }}</strong></a>
+          <p>₹{{ item.price }} × {{ item.quantity }}</p>
+        </div>
+        <strong>₹{{ item.get_total }}</strong>
+      </div>
+      {% endfor %}
+      <div class="summary-total mt-2">
+        <span>Total</span><strong>₹{{ order.total_price }}</strong>
+      </div>
+    </div>
+
+    <div class="order-meta">
+      <div class="meta-card">
+        <h4>Order Info</h4>
+        <p><strong>Date:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Status:</strong> <span class="status-badge {{ order.status }}">{{ order.get_status_display }}</span></p>
+      </div>
+      <div class="meta-card">
+        <h4>Shipping Address</h4>
+        <p>{{ order.full_name }}</p>
+        <p>{{ order.address }}</p>
+        <p>{{ order.city }}, {{ order.state }} – {{ order.zip_code }}</p>
+        <p>{{ order.phone }}</p>
+        <p>{{ order.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <a href="{% url 'order_list' %}" class="btn btn-outline mt-2">← Back to Orders</a>
+</div>
+{% endblock %}
